@@ -56,12 +56,12 @@ class MainActivity : AppCompatActivity(){
         val btnScan = findViewById<Button>(R.id.buttonScan)
         val btnClear = findViewById<Button>(R.id.buttonClear)
 
-        longitudeText = findViewById(R.id.longitude)
-        latitudeText = findViewById(R.id.latitude)
-        deviceIDText = findViewById(R.id.deviceidvalue)
+        longitudeText = findViewById(R.id.longitudeVal)
+        latitudeText = findViewById(R.id.latitudeVal)
+        deviceIDText = findViewById(R.id.deviceVal)
         thingsboardURL = findViewById(R.id.thingsboardURL)
         httpResponse = findViewById(R.id.httpResponse)
-        azimuthText = findViewById(R.id.azimuth)
+        azimuthText = findViewById(R.id.azimuthVal)
 
 
         val pref = getSharedPreferences("data", MODE_PRIVATE)
@@ -139,10 +139,10 @@ class MainActivity : AppCompatActivity(){
         }
 
         btnClear.setOnClickListener {
-            longitudeText.text = "Longitude"
-            latitudeText.text = "Latitude"
-            azimuthText.text = "Azimuth"
-            deviceIDText.text = "Device ID"
+            longitudeText.text = "Empty"
+            latitudeText.text = "Empty"
+            azimuthText.text = "Empty"
+            deviceIDText.text = "Empty"
         }
 
     }
