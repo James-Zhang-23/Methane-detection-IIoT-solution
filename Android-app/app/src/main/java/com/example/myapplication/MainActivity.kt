@@ -23,6 +23,8 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.location.Location
+import android.location.LocationListener
 import kotlinx.coroutines.*
 
 
@@ -118,6 +120,20 @@ class MainActivity : AppCompatActivity(){
                 // GPS provider is not enabled, prompt user to enable it
                 Toast.makeText(this, "Please enable GPS", Toast.LENGTH_SHORT).show()
             }
+
+            val minTime: Long = 5000 // Minimum time between updates (in milliseconds)
+            val minDistance: Float = 10f // Minimum distance between updates (in meters)
+            val locationListener = object : LocationListener {
+                override fun onLocationChanged(location: Location) {
+                    // Handle the new location here
+                    longitudeText.text = location.longitude.toString()
+                    latitudeText.text = location.latitude.toString()
+                }
+                override fun onProviderEnabled(provider: String) {}
+                override fun onProviderDisabled(provider: String) {}
+                override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+            }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, locationListener)
 
             startActivityForResult(intent, requestCodeForQRCode)
         }
