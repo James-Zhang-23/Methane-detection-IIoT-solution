@@ -23,6 +23,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import kotlinx.coroutines.*
 
 
 
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
 
         val btnScan = findViewById<Button>(R.id.buttonScan)
+        val btnClear = findViewById<Button>(R.id.buttonClear)
 
         longitudeText = findViewById(R.id.longitude)
         latitudeText = findViewById(R.id.latitude)
@@ -104,22 +106,45 @@ class MainActivity : AppCompatActivity(){
                 intent.putExtra(s, p)
             }
 
-            // get gps location
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                // GPS provider is enabled, try getting the location
-                val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                location?.let {
-                    longitudeText.text = location.longitude.toString()
-                    latitudeText.text = location.latitude.toString()
-                }
-            } else {
-                // GPS provider is not enabled, prompt user to enable it
-                Toast.makeText(this, "Please enable GPS", Toast.LENGTH_SHORT).show()
-            }
-
             startActivityForResult(intent, requestCodeForQRCode)
+
+            // get gps location
+//            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//                // GPS provider is enabled, try getting the location
+//                val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+//                location?.let {
+//                    longitudeText.text = location.longitude.toString()
+//                    latitudeText.text = location.latitude.toString()
+//                }
+//            } else {
+//                // GPS provider is not enabled, prompt user to enable it
+//                Toast.makeText(this, "Please enable GPS", Toast.LENGTH_SHORT).show()
+//            }
+
+            //startActivityForResult(intent, requestCodeForQRCode)
         }
 
+        btnClear.setOnClickListener {
+            longitudeText.text = "Longitude"
+            latitudeText.text = "Latitude"
+            azimuthText.text = "Azimuth"
+            deviceIDText.text = "Device ID"
+        }
+
+    }
+
+    fun getGPSLocation() {
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // GPS provider is enabled, try getting the location
+            val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            location?.let {
+                longitudeText.text = location.longitude.toString()
+                latitudeText.text = location.latitude.toString()
+            }
+        } else {
+            // GPS provider is not enabled, prompt user to enable it
+            Toast.makeText(this, "Please enable GPS", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -187,6 +212,7 @@ class MainActivity : AppCompatActivity(){
             override fun onResponse(call: Call, response: Response) {
                 runOnUiThread {
                     httpResponse.text = response.message() + ' ' + response.body()?.string()
+                    getGPSLocation()
                 }
             }
         })
